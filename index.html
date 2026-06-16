@@ -97,10 +97,12 @@ canvas{max-width:100%!important}
 .cmd .small{font-family:'IBM Plex Mono';font-weight:600;font-size:13px;margin-top:7px}
 .cmd-risk{background:linear-gradient(135deg,var(--surface),#F6EFE0)}
 .cmd-risk .big{font-size:20px}
-.near-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.near-tag{font-family:'Space Grotesk';font-weight:600;font-size:15px}
-.near-room{font-family:'IBM Plex Mono';font-weight:600;font-size:13px;color:var(--ink-dim)}
-.near-state{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:2px}
+.near-list{display:flex;flex-direction:column;gap:7px;margin-top:3px}
+.near-item{display:flex;align-items:center;gap:8px;font-size:13px}
+.near-state{display:inline-block;width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.near-name{font-family:'Space Grotesk';font-weight:600;font-size:13px;min-width:62px}
+.near-val{font-family:'IBM Plex Mono';font-weight:600;color:var(--ink-dim);margin-left:auto}
+.near-pct{font-family:'IBM Plex Mono';font-size:11px;color:var(--ink-faint);min-width:32px;text-align:right}
 
 /* ====== banners ====== */
 .banner{
@@ -182,7 +184,7 @@ canvas{max-width:100%!important}
 .slim{height:5px;border-radius:99px;background:var(--surface-2);overflow:hidden;border:1px solid var(--hairline)}
 .slim .f{height:100%;border-radius:99px;transition:width .7s ease,background .4s}
 
-.spark{height:108px;position:relative}
+.spark{height:172px;position:relative}
 
 /* ====== tools ====== */
 .tools{display:grid;grid-template-columns:360px 1fr;gap:18px;align-items:start}
@@ -280,12 +282,8 @@ footer{margin-top:30px;padding-top:20px;border-top:1px solid var(--hairline);
     <div class="small" id="aggPnlPct" style="color:var(--ink-faint)">—</div>
   </div>
   <div class="cmd cmd-risk">
-    <div class="cap">Gần giới hạn nhất</div>
-    <div class="near-row">
-      <span class="near-tag" id="nearTag">—</span>
-      <span class="near-room" id="nearRoom"></span>
-    </div>
-    <div class="small" id="nearNote" style="color:var(--ink-faint)">đang chờ dữ liệu</div>
+    <div class="cap">Gần giới hạn nhất · lỗ ngày</div>
+    <div class="near-list" id="nearList"><div class="small" style="color:var(--ink-faint)">đang chờ dữ liệu</div></div>
   </div>
 </div>
 
@@ -433,13 +431,17 @@ function fuelState(frac){ return frac>0.5?'safe':frac>0.2?'caution':'danger'; }
 
 /* ---- daily / max headroom math ---- */
 // dailyFloor = số dư đầu ngày − (size × dailyLoss%). headroom = equity − floor.
+// LOGIC: lỗ ngày không bao giờ được phép vượt qua sàn lỗ tổng → kẹp floor ≥ maxFloor.
 function dailyInfo(a,d){
   const r=RULES[a.firm];
   const lossAmt = a.size*r.dailyLoss/100;          // $ cho phép lỗ/ngày (FTMO 10k, E8 5k)
-  const floor   = (d.start_of_day||a.size) - lossAmt;
+  const maxFloor= a.size*(1-r.maxLoss/100);        // sàn lỗ tổng (FTMO 180k, E8 184k)
+  let   floor   = (d.start_of_day||a.size) - lossAmt;
+  if(floor < maxFloor) floor = maxFloor;           // khi lỗ ngày >= lỗ tổng → lấy = lỗ tổng
   const room    = d.equity - floor;                // $ còn lại trước giới hạn ngày
-  const frac    = Math.max(0,Math.min(1, room/lossAmt));
-  return {lossAmt,floor,room,frac};
+  const span    = (d.start_of_day||a.size) - floor;// dư địa lỗ ngày thực tế (sau khi kẹp)
+  const frac    = span>0 ? Math.max(0,Math.min(1, room/span)) : (room>0?1:0);
+  return {lossAmt,floor,room,frac,span};
 }
 function maxInfo(a,d){
   const r=RULES[a.firm];
@@ -490,46 +492,71 @@ ACCOUNTS.forEach(a=>{
 function makeChart(a){
   const ctx=document.getElementById('chart-'+a.alias);
   const r=RULES[a.firm];
-  const target=a.size*(1+r.target/100), maxLoss=a.size*(1-r.maxLoss/100);
+  const target=a.size*(1+r.target/100), maxFloor=a.size*(1-r.maxLoss/100);
+  const pad=(target-maxFloor)*0.07;
   state[a.alias].chart=new Chart(ctx,{
     type:'line',
     data:{labels:[],datasets:[{
-      label:'Equity',data:[],borderColor:'#A07D33',borderWidth:1.7,
-      pointRadius:0,fill:true,tension:.25,
-      backgroundColor:(c)=>{const g=c.chart.ctx.createLinearGradient(0,0,0,140);
-        g.addColorStop(0,'rgba(160,125,51,.18)');g.addColorStop(1,'rgba(160,125,51,0)');return g;}
+      label:'Equity',data:[],borderColor:'#8A6A28',borderWidth:2,
+      pointRadius:(c)=>c.dataIndex===(c.dataset.data.length-1)?2.8:0,
+      pointBackgroundColor:'#8A6A28',pointBorderColor:'#FBF7EF',pointBorderWidth:1.5,
+      fill:true,tension:.18,
+      backgroundColor:(c)=>{const g=c.chart.ctx.createLinearGradient(0,0,0,172);
+        g.addColorStop(0,'rgba(138,106,40,.28)');g.addColorStop(1,'rgba(138,106,40,0)');return g;}
     }]},
     options:{responsive:true,maintainAspectRatio:false,animation:false,
+      layout:{padding:{left:2,right:2}},
       plugins:{legend:{display:false},
         tooltip:{backgroundColor:'#FBF7EF',borderColor:'#CEC1A7',borderWidth:1,
           titleColor:'#6B6151',bodyColor:'#2A241C',
           callbacks:{
             title:items=>{ if(!items.length) return ''; const ts=Number(items[0].label);
               return isNaN(ts)?'':new Date(ts*1000).toLocaleString('vi-VN'); },
-            label:c=>money(c.parsed.y)}},
+            label:c=>'Equity: '+money(c.parsed.y,2)}},
         zoom:{
           pan:{enabled:true,mode:'xy',modifierKey:'ctrl'},
           zoom:{
             wheel:{enabled:true},
-            drag:{enabled:true,backgroundColor:'rgba(160,125,51,.12)',borderColor:'rgba(160,125,51,.55)',borderWidth:1},
+            drag:{enabled:true,backgroundColor:'rgba(138,106,40,.12)',borderColor:'rgba(138,106,40,.55)',borderWidth:1},
             pinch:{enabled:true},
             mode:'xy'
           },
           limits:{x:{minRange:5}}
         }},
       scales:{x:{display:false},
-        y:{position:'right',grid:{color:'#E4DAC6'},border:{display:false},
-          ticks:{color:'#9A8E78',font:{size:9,family:'IBM Plex Mono'},maxTicksLimit:4,
+        y:{position:'right',grid:{color:'rgba(206,194,167,.45)'},border:{display:false},
+          ticks:{color:'#9A8E78',font:{size:9,family:'IBM Plex Mono'},maxTicksLimit:5,
             callback:v=>'$'+(v/1000).toFixed(0)+'k'},
-          suggestedMin:maxLoss*0.985,suggestedMax:target*1.005}}},
+          suggestedMin:maxFloor-pad,suggestedMax:target+pad}}},
     plugins:[{id:'guides',afterDraw(ch){
-      const {ctx,chartArea:{left,right},scales:{y}}=ch;
-      const gl=[{v:target,c:'#2F8C82',t:'Target'},{v:a.size,c:'#9A8E78',t:'Vốn'},
-        {v:a.size*(1-r.dailyLoss/100),c:'#C0851F',t:'Ngày'},{v:maxLoss,c:'#C24A33',t:'Tổng'}];
-      ctx.save();ctx.setLineDash([3,3]);ctx.font='9px "IBM Plex Mono",monospace';
-      gl.forEach(g=>{const yy=y.getPixelForValue(g.v);if(yy<y.top||yy>y.bottom)return;
-        ctx.strokeStyle=g.c;ctx.globalAlpha=.5;ctx.beginPath();ctx.moveTo(left,yy);ctx.lineTo(right,yy);ctx.stroke();
-        ctx.globalAlpha=1;ctx.fillStyle=g.c;ctx.textAlign='left';ctx.fillText(g.t,left+2,yy-3);});
+      const d=state[a.alias].data; if(!d) return;
+      const {ctx,chartArea:{left,right,top,bottom},scales:{y}}=ch;
+      const di=dailyInfo(a,d), mi=maxInfo(a,d);
+      // mốc cố định + mốc động (equity/balance)
+      const fixed=[
+        {v:target,   c:'#2F8C82', t:'Target'},
+        {v:a.size,   c:'#6B6151', t:'Vốn'},
+        {v:di.floor, c:'#C0851F', t:'Ngày'},
+        {v:mi.floor, c:'#C24A33', t:'Tổng'},
+      ];
+      const dyn=[{v:d.equity, c:'#B8843C', t:'Equity'}];
+      if(Math.abs((d.balance||d.equity)-d.equity)>1) dyn.push({v:d.balance, c:'#3E6E97', t:'Balance'});
+      ctx.save();
+      ctx.font='600 9.5px "IBM Plex Mono",monospace';
+      ctx.textBaseline='middle';
+      const drawLine=(g,dash,alpha,lw)=>{
+        const yy=y.getPixelForValue(g.v); if(yy<top-1||yy>bottom+1) return;
+        ctx.setLineDash(dash); ctx.lineWidth=lw; ctx.strokeStyle=g.c; ctx.globalAlpha=alpha;
+        ctx.beginPath(); ctx.moveTo(left,yy); ctx.lineTo(right,yy); ctx.stroke();
+        ctx.globalAlpha=1; ctx.setLineDash([]);
+        const txt=g.t+'  '+money(g.v,0);
+        const w=ctx.measureText(txt).width;
+        const ly=yy>top+9?yy-8:yy+8;          // nhãn phía trên, sát mép thì lật xuống
+        ctx.fillStyle='rgba(251,247,239,.85)'; ctx.fillRect(left+1,ly-6.5,w+6,13);
+        ctx.fillStyle=g.c; ctx.textAlign='left'; ctx.fillText(txt,left+4,ly);
+      };
+      fixed.forEach(g=>drawLine(g,[4,3],.45,1));
+      dyn.forEach(g=>drawLine(g,[2,2],.85,1.3));
       ctx.restore();
     }}]
   });
@@ -645,19 +672,17 @@ function refreshGlobals(){
   document.getElementById('lastUpdate2').textContent=t;
 
   // aggregates
-  let eqSum=0, startSum=0, n=0, worst=null;
+  let eqSum=0, startSum=0, n=0; const rows=[];
   ACCOUNTS.forEach(a=>{
     const d=state[a.alias].data; if(!d||!state[a.alias].ok) return;
     eqSum+=d.equity; startSum+=d.start_of_day; n++;
-    const di=dailyInfo(a,d);
-    if(worst===null || di.frac<worst.frac) worst={a,di};
+    rows.push({a, di:dailyInfo(a,d)});
   });
+  const nearList=document.getElementById('nearList');
   if(n===0){
     document.getElementById('aggEquity').textContent='—';
     document.getElementById('aggPnl').textContent='—';
-    document.getElementById('nearTag').textContent='—';
-    document.getElementById('nearRoom').textContent='';
-    document.getElementById('nearNote').textContent='đang chờ dữ liệu';
+    nearList.innerHTML='<div class="small" style="color:var(--ink-faint)">đang chờ dữ liệu</div>';
     return;
   }
   document.getElementById('aggEquity').textContent=money(eqSum,0);
@@ -667,15 +692,18 @@ function refreshGlobals(){
   pnlEl.style.color=pnl>=0?'var(--safe)':'var(--danger)';
   document.getElementById('aggPnlPct').textContent=(pnl>=0?'+':'−')+(Math.abs(pnl)/startSum*100).toFixed(2)+'% so với đầu ngày';
 
-  if(worst){
-    document.getElementById('nearTag').textContent=worst.a.alias;
-    document.getElementById('nearTag').style.color=fuelColor(worst.di.frac);
-    document.getElementById('nearRoom').innerHTML=
-      '<span class="near-state" style="background:'+fuelColor(worst.di.frac)+'"></span>còn '+money(Math.max(0,worst.di.room),0);
-    const pctUsed=((worst.di.lossAmt-worst.di.room)/worst.di.lossAmt*100);
-    document.getElementById('nearNote').textContent=
-      'đã dùng '+Math.max(0,pctUsed).toFixed(0)+'% hạn mức lỗ ngày';
-  }
+  // gần giới hạn nhất — liệt kê CẢ 3 tài khoản, rủi ro cao nhất lên đầu
+  rows.sort((x,y)=>x.di.frac-y.di.frac);
+  nearList.innerHTML=rows.map(({a,di})=>{
+    const c=fuelColor(di.frac);
+    const pctUsed=Math.max(0,Math.min(100,(1-di.frac)*100));
+    return '<div class="near-item">'
+      +'<span class="near-state" style="background:'+c+'"></span>'
+      +'<span class="near-name" style="color:'+c+'">'+a.alias+'</span>'
+      +'<span class="near-val">còn '+money(Math.max(0,di.room),0)+'</span>'
+      +'<span class="near-pct">'+pctUsed.toFixed(0)+'%</span>'
+      +'</div>';
+  }).join('');
 }
 
 /* ---------- DD banner ---------- */
