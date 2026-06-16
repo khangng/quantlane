@@ -1,6 +1,6 @@
 // sw.js — service worker cho Risk Desk PWA
 // Cache phần "vỏ" (shell) để app mở nhanh; dữ liệu luôn lấy mới từ mạng.
-const CACHE = 'riskdesk-v4';
+const CACHE = 'riskdesk-v5';
 const SHELL = [
   '/', '/index.html', '/manifest.json',
   '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png', '/favicon.png'
