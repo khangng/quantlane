@@ -12,7 +12,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 
+<!-- Nạp thư viện Chart.js và Plugin Zoom -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/2.0.1/chartjs-plugin-zoom.min.js"></script>
 
 <style>
 :root{
@@ -630,7 +633,7 @@ transition:.55s ease;
 }
 
 .spark{
-height:188px;
+height:240px; /* Tăng chiều cao để vẽ chart FTMO đẹp hơn */
 position:relative;
 }
 
@@ -960,8 +963,10 @@ padding-left:20px;
 padding-right:20px;
 }
 
+/* CĂN GIỮA LOGO TRÊN MOBILE */
 .wordmark{
 width:100%;
+justify-content:center; /* Căn giữa */
 gap:12px;
 }
 
@@ -969,6 +974,7 @@ gap:12px;
 width:165px;
 height:87px;
 border-radius:18px;
+margin: 0 auto; /* Đảm bảo ra giữa */
 }
 
 .wordmark .role{
@@ -1084,9 +1090,10 @@ src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAlgAAAE7CAMAAAA2MA+HAAAAwFBMV
 
 <div class="command">
 <div class="cmd">
-<div class="cap">Tổng Equity · tài khoản live</div>
+<!-- Đổi chữ tiêu đề theo yêu cầu 1 -->
+<div class="cap">TỔNG EQUITY · 3 TÀI KHOẢN</div>
 <div class="big is-skeleton" id="aggEquity">$000,000</div>
-<div class="small is-skeleton" id="aggSize">live $000,000 / tổng $000,000 vốn</div>
+<div class="small is-skeleton" id="aggSize">trên $000,000 vốn</div>
 </div>
 
 <div class="cmd">
@@ -1139,7 +1146,7 @@ Không đọc được dữ liệu. API <span class="mono">/api/data</span> chư
 <div class="accounts" id="acctGrid"></div>
 
 <div class="cap-hint">
-Biểu đồ chỉ hiện khi có dữ liệu equity/balance hợp lệ · nhấp đúp biểu đồ để đặt lại zoom
+Dùng 2 ngón tay vuốt hoặc lăn chuột để Zoom biểu đồ · nhấp đúp biểu đồ để đặt lại
 </div>
 
 <div class="shead">
@@ -1273,19 +1280,19 @@ Tính đồng thời cho FTMO và E8 Market. Risk mặc định khi vào web là
 
 <footer>
 <span>Cập nhật: <span id="lastUpdate2">—</span></span>
-<span>Dữ liệu qua Cloudflare KV · không phải số liệu chính thức của quỹ</span>
+<span>Dữ liệu qua Netlify · không phải số liệu chính thức của quỹ</span>
 </footer>
 
 </div>
 </div>
 
 <script>
+// Chú ý sửa lại đường dẫn theo ý bạn ở đây:
 const DATA_ENDPOINT = "/.netlify/functions/data";
 const DEFAULT_RISK_USD = 1800;
 
-// === ĐÃ CHỈNH SỬA TẦN SUẤT Ở ĐÂY ĐỂ TRÁNH TRỪ TẬN CÙNG CREDIT ===
-const VISIBLE_POLL_MS = 30000;   // Thay vì 5s, bây giờ là 30s khi mở web
-const HIDDEN_POLL_MS = 120000;   // Thay vì 30s, bây giờ là 120s (2 phút) khi ẩn web
+const VISIBLE_POLL_MS = 30000;
+const HIDDEN_POLL_MS = 120000;
 const FETCH_TIMEOUT_MS = 4500;
 
 const ACCOUNT_STALE_MS = 90000;
@@ -1302,7 +1309,7 @@ const RULE_PRESETS = {
 ftmo:{
 dailyLoss:5,
 maxLoss:10,
-target:null,
+target:10, /* Setup mốc target ảo để vẽ biểu đồ */
 dailyProfitCap:null
 },
 e8:{
@@ -1584,6 +1591,81 @@ grid.appendChild(card);
 });
 }
 
+// ==========================================
+// PLUGIN VẼ ĐƯỜNG MỤC TIÊU GIỐNG FTMO
+// ==========================================
+const ftmoGuidesPlugin = {
+    id: 'ftmoGuides',
+    beforeDraw(chart) {
+        const { ctx, chartArea: { top, bottom, left, right }, scales: { y } } = chart;
+        const alias = chart.canvas.id.replace('chart-', '');
+        const d = state[alias].data;
+        const a = ACCOUNTS.find(acc => acc.alias === alias);
+        if (!d || !a) return;
+
+        const di = dailyInfo(a, d);
+        const mi = maxInfo(a, d);
+        const r = rulesFor(a);
+        const target = r.target ? a.size * (1 + r.target/100) : null;
+
+        // Hàm vẽ từng đường kẻ và ô chữ
+        const drawLineWithLabel = (val, bgColor, textColor, text) => {
+            const yPos = y.getPixelForValue(val);
+            if (yPos < top || yPos > bottom) return;
+
+            ctx.save();
+            // 1. Vẽ đường line mỏng
+            ctx.beginPath();
+            ctx.moveTo(left, yPos);
+            ctx.lineTo(right, yPos);
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = bgColor;
+            ctx.stroke();
+
+            // 2. Vẽ hình chữ nhật background
+            const valText = money(val, 2);
+            ctx.font = 'bold 9.5px "IBM Plex Mono", sans-serif';
+            
+            const valWidth = ctx.measureText(valText).width;
+            const textWidth = ctx.measureText(text).width;
+            
+            // Chia làm 2 box kề nhau cho giống FTMO (Box 1: Số tiền, Box 2: Tên)
+            const box1Width = valWidth + 10;
+            const box2Width = textWidth + 10;
+            const boxHeight = 16;
+            const boxY = yPos - boxHeight/2;
+
+            // Box trái (giá trị)
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(left, boxY, box1Width, boxHeight);
+            
+            // Box phải (tên) - hơi tối hoặc đồng màu tùy ý
+            ctx.fillStyle = textColor === '#000' ? 'rgba(0,0,0,0.8)' : bgColor;
+            ctx.fillRect(left + box1Width, boxY, box2Width, boxHeight);
+
+            // 3. Viết chữ
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = textColor;
+            ctx.fillText(valText, left + 5, yPos);
+            ctx.fillStyle = '#FFF';
+            ctx.fillText(text, left + box1Width + 5, yPos);
+
+            ctx.restore();
+        };
+
+        // Thứ tự vẽ: Profit, Size, Equity, Balance, Daily Loss, Max Loss
+        if(target) drawLineWithLabel(target, '#21c2b5', '#FFF', 'Profit Target');
+        drawLineWithLabel(a.size, '#2c333a', '#FFF', 'Account size');
+        
+        drawLineWithLabel(di.floor, '#ef5350', '#FFF', 'Max Daily Loss');
+        drawLineWithLabel(mi.floor, '#d32f2f', '#FFF', 'Max Loss');
+        
+        // Vẽ Equity/Balance đè lên trên cùng để dễ nhìn
+        drawLineWithLabel(d.balance, '#29b6f6', '#FFF', 'Balance');
+        drawLineWithLabel(d.equity, '#ffca28', '#000', 'Equity');
+    }
+};
+
 function makeCharts(){
 if(!window.Chart) return;
 
@@ -1592,6 +1674,7 @@ const canvas = document.getElementById("chart-" + a.alias);
 
 state[a.alias].chart = new Chart(canvas,{
 type:"line",
+plugins: [ftmoGuidesPlugin], // Add custom plugin
 data:{
 datasets:[
 {
@@ -1601,8 +1684,13 @@ parsing:false,
 borderColor:"#E15241",
 borderWidth:2,
 pointRadius:0,
-fill:false,
-tension:.22
+tension:.22,
+// VÙNG ĐỎ GIỐNG FTMO: Tô màu vùng giữa Equity và Account Size
+fill: {
+    target: { value: a.size }, // Sẽ update động
+    below: 'rgba(239, 83, 80, 0.25)', // Màu đỏ nhạt khi lỗ
+    above: 'rgba(33, 194, 181, 0.2)'  // Màu xanh nhạt khi lãi
+}
 },
 {
 label:"Balance",
@@ -1624,6 +1712,15 @@ animation:false,
 interaction:{mode:"nearest",intersect:false},
 plugins:{
 legend:{display:false},
+// Cấu hình Zoom (Pan/Zoom)
+zoom: {
+    pan: { enabled: true, mode: 'x' },
+    zoom: {
+        wheel: { enabled: true },
+        pinch: { enabled: true },
+        mode: 'x',
+    }
+},
 tooltip:{
 backgroundColor:"#FBF7EF",
 borderColor:"#CEC1A7",
@@ -1642,20 +1739,10 @@ label:c=>`${c.dataset.label}: ${money(c.parsed.y,2)}`
 scales:{
 x:{type:"linear",display:false},
 y:{
-display:false,
+display:false, // Ẩn cột mốc mặc định vì đã có Plugin custom vẽ
 position:"right",
 grid:{color:"rgba(206,194,167,.45)"},
-border:{display:false},
-ticks:{
-color:"#7C705F",
-font:{size:9,family:"IBM Plex Mono",weight:"700"},
-maxTicksLimit:6,
-callback:v=>{
-if(!Number.isFinite(v)) return "";
-if(Math.abs(v) < 1) return "";
-return "$" + (v/1000).toFixed(0) + "k";
-}
-}
+border:{display:false}
 }
 }
 }
@@ -1664,8 +1751,7 @@ return "$" + (v/1000).toFixed(0) + "k";
 canvas.ondblclick = ()=>{
 const ch = state[a.alias].chart;
 if(ch){
-ch.options.scales.y.min = undefined;
-ch.options.scales.y.max = undefined;
+ch.resetZoom(); // Dùng hàm chuẩn của plugin Zoom
 renderChartView(a);
 }
 };
@@ -1687,7 +1773,6 @@ const data = (view.length >= 2 ? view : h.slice(-2))
 if(data.length < 2){
 ch.data.datasets[0].data = [];
 ch.data.datasets[1].data = [];
-ch.options.scales.y.display = false;
 if(spark) spark.classList.add("no-data");
 ch.update("none");
 return;
@@ -1695,28 +1780,32 @@ return;
 
 if(spark) spark.classList.remove("no-data");
 
-ch.options.scales.y.display = true;
 ch.data.datasets[0].data = data.map(p=>({x:p.t,y:p.eq}));
 ch.data.datasets[1].data = data.map(p=>({x:p.t,y:p.bal ?? null}));
 
 const d = state[a.alias].data;
 
 if(d){
+// Update trục y target cho Fill color đỏ/xanh
+ch.data.datasets[0].fill.target.value = a.size;
+
 const di = dailyInfo(a,d);
 const mi = maxInfo(a,d);
+const r = rulesFor(a);
+const target = r.target ? a.size * (1 + r.target/100) : a.size;
+
 const values = [
 ...data.map(p=>p.eq).filter(Number.isFinite),
 ...data.map(p=>p.bal).filter(Number.isFinite),
 a.size,
 di.floor,
 mi.floor,
-d.equity,
-d.balance
+target
 ];
 
 const min = Math.min(...values);
 const max = Math.max(...values);
-const pad = Math.max(500,(max-min)*.12);
+const pad = Math.max(500,(max-min)*.15); // Padding để nhãn chữ không sát mép
 
 ch.options.scales.y.suggestedMin = min - pad;
 ch.options.scales.y.suggestedMax = max + pad;
@@ -1840,27 +1929,38 @@ pullInFlight = false;
 }
 }
 
+// ==== SỬA LẠI YÊU CẦU: LUÔN CỘNG ĐỦ 3 TÀI KHOẢN KỂ CẢ KHI OFFLINE ===
 function refreshGlobals(){
-const freshRows = [];
+let liveCount = 0;
+let eqSum = 0;
+let startSum = 0;
+const allRows = [];
 
 ACCOUNTS.forEach(a=>{
 const d = state[a.alias].data;
-if(!d || !state[a.alias].ok || !isFreshAlias(a.alias)) return;
-freshRows.push({a,d,di:dailyInfo(a,d)});
+// Chặn khi chưa từng có data lần nào, còn nếu có data cũ thì vẫn lấy để tính tổng
+if(!d) return; 
+
+const isLive = isFreshAlias(a.alias);
+if(isLive) liveCount++;
+
+allRows.push({a, d, di: dailyInfo(a,d), isLive});
+eqSum += d.equity;
+startSum += d.start_of_day;
 });
 
 const dot = document.getElementById("globalDot");
 const st = document.getElementById("globalStatus");
 
-if(freshRows.length === 0){
+if(liveCount === 0){
 dot.className = "dot off";
 st.textContent = "Không có dữ liệu live";
-}else if(freshRows.length === ACCOUNTS.length){
+}else if(liveCount === ACCOUNTS.length){
 dot.className = "dot live";
-st.textContent = `${freshRows.length}/${ACCOUNTS.length} tài khoản live`;
+st.textContent = `${liveCount}/${ACCOUNTS.length} tài khoản live`;
 }else{
 dot.className = "dot stale";
-st.textContent = `${freshRows.length}/${ACCOUNTS.length} tài khoản live`;
+st.textContent = `${liveCount}/${ACCOUNTS.length} tài khoản live`;
 }
 
 const t = new Date().toLocaleTimeString("vi-VN");
@@ -1869,28 +1969,19 @@ document.getElementById("lastUpdate2").textContent = t;
 
 const totalSize = ACCOUNTS.reduce((s,a)=>s+a.size,0);
 
-if(freshRows.length === 0){
+if(allRows.length === 0){
 setText("aggEquity","—");
 setText("aggPnl","—");
-setText("aggPnlPct","Chỉ tính dữ liệu live");
-setText("aggSize",`live $0 / tổng ${money(totalSize,0)} vốn`);
+setText("aggPnlPct","Chưa có dữ liệu");
+setText("aggSize",`trên ${money(totalSize,0)} vốn`);
 document.getElementById("nearList").innerHTML =
-'<div class="small" style="color:var(--ink-faint);font-weight:800">không có tài khoản live</div>';
+'<div class="small" style="color:var(--ink-faint);font-weight:800">Đang tải tài khoản...</div>';
 return;
 }
 
-let eqSum = 0;
-let startSum = 0;
-let liveSize = 0;
-
-freshRows.forEach(({a,d})=>{
-eqSum += d.equity;
-startSum += d.start_of_day;
-liveSize += a.size;
-});
-
 setText("aggEquity",money(eqSum,0));
-setText("aggSize",`live ${money(liveSize,0)} / tổng ${money(totalSize,0)} vốn`);
+// Đã sửa thành hiển thị tổng vốn cứng
+setText("aggSize",`trên ${money(totalSize,0)} vốn`);
 
 const pnl = eqSum - startSum;
 const pnlEl = document.getElementById("aggPnl");
@@ -1903,14 +1994,16 @@ setText(
 (pnl >= 0 ? "+" : "−") + (Math.abs(pnl) / startSum * 100).toFixed(2) + "% so với đầu ngày"
 );
 
-freshRows.sort((x,y)=>x.di.frac - y.di.frac);
+// Sắp xếp Gần Giới Hạn Nhất (Ưu tiên phần trăm rủi ro cao nhất lên đầu)
+allRows.sort((x,y)=>x.di.frac - y.di.frac);
 
-document.getElementById("nearList").innerHTML = freshRows.map(({a,di})=>{
-const c = fuelColor(di.frac);
+// In ra cả 3 tài khoản, tài khoản nào offline thì chuyển sang màu mờ
+document.getElementById("nearList").innerHTML = allRows.map(({a,di,isLive})=>{
+const c = isLive ? fuelColor(di.frac) : "var(--ink-faint)";
 const pctUsed = Math.max(0,Math.min(100,(1-di.frac)*100));
 
 return `
-<div class="near-item">
+<div class="near-item" style="opacity: ${isLive ? 1 : 0.6}">
 <span class="near-state" style="background:${c}"></span>
 <span class="near-name" style="color:${c}">${a.alias}</span>
 <span class="near-val">còn ${money(Math.max(0,di.room),0)}</span>
@@ -2254,8 +2347,7 @@ document.getElementById("resetZoomAll").addEventListener("click",()=>{
 ACCOUNTS.forEach(a=>{
 const ch = state[a.alias].chart;
 if(ch){
-ch.options.scales.y.min = undefined;
-ch.options.scales.y.max = undefined;
+ch.resetZoom();
 renderChartView(a);
 }
 });
@@ -2264,16 +2356,8 @@ renderChartView(a);
 document.getElementById("zoomInAll").addEventListener("click",()=>{
 ACCOUNTS.forEach(a=>{
 const ch = state[a.alias].chart;
-if(ch && ch.scales.y && ch.scales.y.display !== false){
-const y = ch.scales.y;
-const min = y.min;
-const max = y.max;
-if(!Number.isFinite(min) || !Number.isFinite(max) || min === max) return;
-const mid = (min + max) / 2;
-const half = (max - min) / 2 / 1.25;
-ch.options.scales.y.min = mid - half;
-ch.options.scales.y.max = mid + half;
-ch.update("none");
+if(ch){
+ch.zoom(1.2); // Tự động zoom 1.2x khi bấm nút Zoom In
 }
 });
 });
