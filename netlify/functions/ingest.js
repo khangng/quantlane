@@ -3,14 +3,7 @@
 // Bảo vệ bằng header X-Ingest-Key khớp biến môi trường INGEST_KEY.
 
 import { getStore } from "@netlify/blobs";
-
-const ALLOWED_ALIASES = ["ftmo_1", "ftmo_2", "e8_1"];
-// Cho phép cả luồng giá riêng: "<alias>_px"
-const ALLOWED_PRICE = ALLOWED_ALIASES.map((a) => a + "_px");
-
-function aliasAllowed(alias) {
-  return ALLOWED_ALIASES.includes(alias) || ALLOWED_PRICE.includes(alias);
-}
+import { loadRegistry } from '../../lib/registry.js';
 
 export default async (req) => {
   if (req.method !== "POST") {
@@ -32,9 +25,15 @@ export default async (req) => {
 
   // alias bắt buộc và nằm trong danh sách cho phép (gồm cả luồng _px)
   const alias = String(body.alias || "").toLowerCase();
-  if (!aliasAllowed(alias)) {
+  const {data:registry}=await loadRegistry();
+  const account=registry.accounts.find(a=>a.alias.toLowerCase()===alias.replace(/_px$/,''));
+  if (!account) {
     return json({ error: "bad_alias", got: alias }, 400);
   }
+  // Freeze snapshots/history of archived accounts; restoring requires the manager.
+  if(account.status!=='active')return json({error:'account_inactive',alias},409);
+  if(!alias.endsWith('_px') && (body.program!==account.program || body.account_size!==account.size))
+    return json({error:'account_config_mismatch',alias},409);
 
   // gắn thời điểm nhận để web tính độ trễ chính xác phía server
   body.server_recv = Math.floor(Date.now() / 1000);

@@ -1,0 +1,36 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Quản lý tài khoản · Quantlane 2.13</title><link rel="icon" href="/favicon.png"><link rel="stylesheet" href="/manage.css"></head>
+<body><main>
+<header><div><div class="eyebrow">QUANTLANE / 2.13</div><h1>Quản lý tài khoản</h1><p>Thêm, lưu trữ và cấu hình tại một nơi.</p></div><a class="button secondary" href="/">← Dashboard</a></header>
+<section class="panel" id="loginPanel"><h2>Mở quyền quản trị</h2><p>Dùng <b>ADMIN_KEY</b> đã tạo trên Netlify. Khóa chỉ được giữ trong bộ nhớ của tab này.</p><form id="loginForm" class="inline"><input id="adminKey" type="password" placeholder="Nhập khóa quản trị" autocomplete="off" required aria-label="Khóa quản trị"><button>Mở quản lý</button></form></section>
+<div id="message" role="status" aria-live="polite"></div>
+<div id="workspace" hidden>
+<section class="toolbar"><div><b id="counts">—</b><p>Thay đổi được lưu chung trên website, không cần deploy lại.</p></div><div class="actions"><button id="newAccount">+ Thêm tài khoản</button><button id="reload" class="secondary">Tải lại</button><button id="logout" class="secondary">Khóa quản lý</button></div></section>
+<p class="notice">Quản lý ở đây không tắt EA và không đóng lệnh MT5. Thông số rủi ro chỉ có hiệu lực trong MT5 sau khi bạn nạp cấu hình và kiểm tra Inputs.</p>
+<section class="panel"><h2>Bộ ba E8 của bạn</h2><p>Signature 100k Challenge · One 200k Challenge · Pro 200k Performance. Nút dưới giữ cấu hình tài khoản phù hợp đã có (kể cả payout Pro), thêm tài khoản còn thiếu và lưu trữ các tài khoản khác. Lịch sử được giữ. Hãy gỡ EA khỏi FTMO đã tạch trước.</p><button id="setupThree" class="secondary">Áp dụng bộ ba E8</button><p>Cấu hình mới chỉ là mẫu chờ xác nhận; không xuất .set trước khi bạn kiểm tra tỷ lệ One, mức dừng cá nhân và trạng thái payout Pro.</p></section>
+<section id="accountList" class="cards"></section>
+<details class="panel"><summary>Tài khoản đã xóa khỏi danh sách</summary><p>Dữ liệu được giữ lại. Alias cũ không được dùng cho tài khoản mới.</p><div id="hiddenList"></div></details>
+</div>
+<dialog id="editor"><form id="accountForm">
+<div class="dialog-head"><div><div class="eyebrow">CẤU HÌNH TÀI KHOẢN</div><h2 id="editorTitle">Thêm tài khoản</h2></div><button type="button" class="secondary" id="closeEditor">Đóng</button></div>
+<div class="form-grid">
+<label>Alias riêng biệt<input id="alias" required pattern="[A-Za-z][A-Za-z0-9]{0,15}_[1-9][0-9]{0,5}" placeholder="Ví dụ: E8ONE_1"></label>
+<label>Chương trình<select id="program"><option value="E8_SIGNATURE_FOREX">E8 Signature · MT5 Classic · Challenge</option><option value="E8_ONE_FOREX">E8 One · MT5 Classic</option><option value="E8_PRO_FOREX">E8 Pro Forex</option><option value="FTMO_STANDARD_2STEP">FTMO Standard 2-Step</option></select></label>
+<label>Vốn ban đầu (USD)<input id="size" type="number" min="100" max="10000000" step="0.01" required value="200000"></label>
+<label>Giai đoạn<select id="stage"></select></label>
+<label>Mục tiêu lợi nhuận (%)<input id="targetPct" type="number" min="0.01" max="100" step="0.01" required></label>
+<label>Dừng cá nhân mỗi ngày (USD)<input id="dailyStopUsd" type="number" min="0.01" step="0.01" required value="3500"></label>
+<label>Giới hạn lỗ ngày (%)<input id="dailyPct" type="number" min="0" max="99" step="0.01" required><small>Signature Challenge: 0 = không áp dụng; dừng cá nhân vẫn có hiệu lực.</small></label>
+<label id="totalPctLabel">Giới hạn lỗ tổng (%)<input id="totalPct" type="number" min="0.01" max="99" step="0.01" required></label>
+<label>Cảnh báo khi dùng (%) ngân sách<input id="warningPct" type="number" min="0.01" max="99.99" step="0.01" required value="80"></label>
+<label id="floorField">Sàn tổng tuyệt đối (USD)<input id="totalFloorOverride" type="number" min="0" step="0.01" value="0"><small>0 = theo profile. Chỉ nhập sàn đã đối chiếu với quỹ.</small></label>
+<label id="payoutField" class="check"><input id="afterFirstPayout" type="checkbox"> E8 Pro đã yêu cầu payout lần đầu</label>
+<label id="peakField">Đỉnh balance xác nhận (USD)<input id="confirmedPeak" type="number" min="0" step="0.01" value="0"><small>0 = tự khôi phục từ lịch sử đầy đủ. Chỉ nhập khi đã xác nhận đỉnh/sàn chính thức.</small></label>
+<label id="eodField">Giờ chốt EOD Signature theo server<input id="eodHour" type="number" min="0" max="23" step="1" value="23"><small>Đỉnh xác nhận của Signature phải là đỉnh CUỐI NGÀY; không dùng đỉnh trong phiên.</small></label>
+</div>
+<p id="programHelp" class="notice"></p><label class="check"><input id="verifiedRules" type="checkbox" required> Tôi đã đối chiếu chương trình, giai đoạn và các tỷ lệ với dashboard quỹ.</label>
+<p id="editError" class="error" role="alert"></p><div class="actions"><button id="saveAccount">Lưu cấu hình</button></div>
+</form></dialog>
+<dialog id="confirmDialog"><form method="dialog"><h2 id="confirmTitle"></h2><p id="confirmText"></p><label id="reasonLabel">Ghi chú<input id="reason" maxlength="120" placeholder="Ví dụ: Đã vi phạm lỗ tổng"></label><div class="actions"><button value="cancel" class="secondary">Hủy</button><button value="ok" id="confirmButton">Xác nhận</button></div></form></dialog>
+<dialog id="presetDialog"><div class="dialog-head"><h2>Cấu hình MT5</h2><button id="closePreset" class="secondary">Đóng</button></div><p id="presetName"></p><ol><li>Tải file .set này về máy/VPS chạy MT5.</li><li>Mở Inputs của EA v2.13 → Load → chọn file .set.</li><li>Điền <b>InpNetlifyKey</b> bằng INGEST_KEY của bạn. File .set không chứa khóa.</li><li>Kiểm tra lại toàn bộ Inputs, đặc biệt PSAR, override và số tài khoản đang đăng nhập; sau đó bấm OK.</li></ol><p class="notice">Xuất .set không tự thay đổi MT5. Lưu preset cũ trước khi nạp. Nếu preset có dòng trống, MT5 vẫn cần bạn điền đúng.</p><pre id="presetPreview"></pre><button id="downloadPreset">Tải file .set</button></dialog>
+<footer>Quantlane 2.13 · Một nơi quản lý · MT5 là nguồn số liệu thực tế</footer>
+</main><script type="module" src="/manage.js"></script></body></html>

@@ -1,9 +1,10 @@
 {
   "name": "riskdesk-dashboard",
-  "version": "1.0.0",
+  "version": "2.13.0",
   "type": "module",
   "private": true,
+  "scripts": {"build":"node build-check.mjs"},
   "dependencies": {
-    "@netlify/blobs": "^8.1.0"
+    "@netlify/blobs": "10.7.13"
   }
 }

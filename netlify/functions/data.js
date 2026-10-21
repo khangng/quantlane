@@ -4,11 +4,7 @@
 // Đọc từ Netlify Blobs. Mở CORS để dashboard ở domain khác cũng gọi được.
 
 import { getStore } from "@netlify/blobs";
-
-const ALIASES = ["ftmo_1", "ftmo_2", "e8_1"];
-const PRICE_KEYS = ALIASES.map((a) => a + "_px");
-const HIST_KEYS = ALIASES.map((a) => a + "_hist");
-const ALL_KEYS = [...ALIASES, ...PRICE_KEYS, ...HIST_KEYS];
+import { loadRegistry,publicAccount } from '../../lib/registry.js';
 
 export default async (req) => {
   const url = new URL(req.url);
@@ -16,13 +12,17 @@ export default async (req) => {
   const store = getStore("riskdesk");
 
   try {
+    const {data:registry}=await loadRegistry();
+    const accounts=registry.accounts.filter(a=>a.status!=='hidden');
+    const aliases=accounts.map(a=>a.alias.toLowerCase());
+    const ALL_KEYS=aliases.flatMap(a=>[a,a+'_px',a+'_hist']);
     if (acct) {
       if (!ALL_KEYS.includes(acct)) return json({ error: "bad_alias" }, 400);
       const d = await store.get(acct, { type: "json" });
       return json(d || null);
     }
     // trả tất cả: equity + giá
-    const out = {};
+    const out = {_config:{revision:registry.revision,accounts:accounts.map(publicAccount)}};
     await Promise.all(
       ALL_KEYS.map(async (a) => {
         out[a] = (await store.get(a, { type: "json" })) || null;

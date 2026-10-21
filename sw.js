@@ -1,8 +1,8 @@
 // sw.js — service worker cho Risk Desk PWA
 // Cache phần "vỏ" (shell) để app mở nhanh; dữ liệu luôn lấy mới từ mạng.
-const CACHE = 'riskdesk-v5';
+const CACHE = 'riskdesk-v213';
 const SHELL = [
-  '/', '/index.html', '/manifest.json',
+  '/', '/index.html', '/fund-rules.js', '/manifest.json',
   '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png', '/favicon.png'
 ];
 
@@ -25,6 +25,7 @@ self.addEventListener('fetch', (e) => {
 
   // Dữ liệu từ Netlify Functions: luôn lấy mạng, không cache (tránh số liệu cũ)
   if (url.pathname.includes('/.netlify/functions/')) return;
+  if (/^\/manage(?:\.html|\.js|\.css)?$/.test(url.pathname)) return;
 
   // Vỏ app (same-origin GET): ưu tiên cache, có mạng thì cập nhật nền
   if (e.request.method === 'GET' && url.origin === self.location.origin) {
