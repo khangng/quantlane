@@ -93,16 +93,16 @@ canvas{max-width:100%!important}
 @media(max-width:760px){.command{grid-template-columns:1fr}}
 .cmd{background:var(--surface);padding:18px 22px;position:relative}
 .cmd .cap{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;margin-bottom:9px}
-.cmd .big{font-family:'IBM Plex Mono';font-weight:700;font-size:27px;letter-spacing:-.02em;color:var(--ink);line-height:1}
-.cmd .small{font-family:'IBM Plex Mono';font-weight:600;font-size:13px;margin-top:7px}
+.cmd .big{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:700;font-size:27px;letter-spacing:-.02em;color:var(--ink);line-height:1}
+.cmd .small{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:600;font-size:13px;margin-top:7px}
 .cmd-risk{background:linear-gradient(135deg,var(--surface),#F6EFE0)}
 .cmd-risk .big{font-size:20px}
 .near-list{display:flex;flex-direction:column;gap:7px;margin-top:3px}
 .near-item{display:flex;align-items:center;gap:8px;font-size:13px}
 .near-state{display:inline-block;width:9px;height:9px;border-radius:50%;flex:0 0 auto}
-.near-name{font-family:'Space Grotesk';font-weight:600;font-size:13px;min-width:62px}
-.near-val{font-family:'IBM Plex Mono';font-weight:600;color:var(--ink-dim);margin-left:auto}
-.near-pct{font-family:'IBM Plex Mono';font-size:11px;color:var(--ink-faint);min-width:32px;text-align:right}
+.near-name{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:600;font-size:13px;min-width:62px}
+.near-val{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:600;color:var(--ink-dim);margin-left:auto}
+.near-pct{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11px;color:var(--ink-faint);min-width:32px;text-align:right}
 
 /* ====== banners ====== */
 .banner{
@@ -117,7 +117,7 @@ canvas{max-width:100%!important}
 .banner.news{background:linear-gradient(100deg,rgba(224,165,58,.14),rgba(224,165,58,.03));border-color:rgba(224,165,58,.38);border-left:3px solid var(--caution)}
 .banner.flash{animation:flash 1.1s steps(2) infinite}
 @keyframes flash{50%{filter:brightness(1.35)}}
-.banner .cd{font-family:'IBM Plex Mono';font-weight:700;font-size:20px;color:var(--caution);margin-left:auto}
+.banner .cd{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:700;font-size:20px;color:var(--caution);margin-left:auto}
 
 /* ====== section heads ====== */
 .shead{display:flex;align-items:center;gap:14px;margin:30px 0 16px;flex-wrap:wrap}
@@ -126,7 +126,7 @@ canvas{max-width:100%!important}
 .shead .note{font-size:11.5px;color:var(--ink-faint)}
 .seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--hairline);border-radius:99px;padding:3px;gap:2px}
 .seg button{appearance:none;border:none;background:transparent;color:var(--ink-dim);
-  font-family:'IBM Plex Mono';font-weight:600;font-size:11px;letter-spacing:.01em;
+  font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:600;font-size:11px;letter-spacing:.01em;
   padding:5px 12px;border-radius:99px;cursor:pointer;transition:background .2s,color .2s}
 .seg button:hover{color:var(--ink)}
 .seg button.on{background:var(--brass);color:#fff;box-shadow:0 1px 3px rgba(160,125,51,.35)}
@@ -147,14 +147,14 @@ canvas{max-width:100%!important}
 .acct[data-state="caution"]::before{background:linear-gradient(90deg,var(--caution),transparent 75%);opacity:.9}
 .acct:hover{transform:translateY(-2px);border-color:var(--hairline-2);box-shadow:var(--shadow-lift)}
 .acct-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
-.acct-name{font-family:'Space Grotesk';font-weight:700;font-size:18px;letter-spacing:.04em}
+.acct-name{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;font-size:18px;letter-spacing:.04em}
 .acct-firm{font-size:10.5px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.09em;margin-top:3px}
 .chip{display:inline-flex;align-items:center;gap:7px;font-size:11px;color:var(--ink-dim);
   background:var(--surface-2);border:1px solid var(--hairline);padding:5px 10px;border-radius:99px}
 
 .acct-eq{display:flex;align-items:baseline;gap:11px;margin-bottom:3px}
-.eq-val{font-family:'IBM Plex Mono';font-weight:700;font-size:29px;letter-spacing:-.02em;color:var(--ink)}
-.eq-delta{font-family:'IBM Plex Mono';font-weight:600;font-size:13px}
+.eq-val{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:700;font-size:29px;letter-spacing:-.02em;color:var(--ink)}
+.eq-delta{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:600;font-size:13px}
 .acct-sub{color:var(--ink-dim);font-size:11.5px;margin-bottom:18px}
 .acct-sub .mono{color:var(--ink-dim)}
 
@@ -162,7 +162,7 @@ canvas{max-width:100%!important}
 .gauge{margin-bottom:14px}
 .gauge-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
 .gauge-head .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-faint);font-weight:600}
-.gauge-room{font-family:'IBM Plex Mono';font-weight:700;font-size:12.5px}
+.gauge-room{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:700;font-size:12.5px}
 .gauge-track{
   position:relative;height:14px;border-radius:7px;overflow:hidden;
   background:var(--surface-2);box-shadow:inset 0 1px 2px rgba(80,60,30,.12);
@@ -180,7 +180,7 @@ canvas{max-width:100%!important}
 .maxbar{margin-bottom:16px}
 .maxbar-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
 .maxbar-head .lbl{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);font-weight:500}
-.maxbar-head .v{font-family:'IBM Plex Mono';font-weight:600;font-size:11px;color:var(--ink-dim)}
+.maxbar-head .v{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:600;font-size:11px;color:var(--ink-dim)}
 .slim{height:5px;border-radius:99px;background:var(--surface-2);overflow:hidden;border:1px solid var(--hairline)}
 .slim .f{height:100%;border-radius:99px;transition:width .7s ease,background .4s}
 
@@ -190,14 +190,14 @@ canvas{max-width:100%!important}
 .tools{display:grid;grid-template-columns:360px 1fr;gap:18px;align-items:start}
 @media(max-width:940px){.tools{grid-template-columns:1fr}}
 .panel{background:var(--surface);border:1px solid var(--hairline);border-radius:18px;padding:22px;box-shadow:var(--shadow)}
-.panel h3{font-family:'Space Grotesk';font-weight:600;font-size:15px;letter-spacing:.02em;margin-bottom:4px;display:flex;align-items:center;gap:9px}
+.panel h3{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:600;font-size:15px;letter-spacing:.02em;margin-bottom:4px;display:flex;align-items:center;gap:9px}
 .panel .hint{color:var(--ink-faint);font-size:11.5px;margin-bottom:18px;line-height:1.5}
 .fld{display:block;margin-bottom:14px}
 .fld .cap{display:block;font-size:10.5px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px;font-weight:600}
 input,select{
   width:100%;background:var(--bg);color:var(--ink);
   border:1px solid var(--hairline-2);border-radius:10px;padding:11px 13px;
-  font-size:14px;font-family:'Inter';transition:border-color .2s,box-shadow .2s;
+  font-size:14px;font-family:'Inter',system-ui,sans-serif;transition:border-color .2s,box-shadow .2s;
 }
 input.mono{font-family:'IBM Plex Mono'}
 input:focus,select:focus{outline:none;border-color:var(--brass);box-shadow:0 0 0 3px rgba(184,148,85,.16)}
@@ -209,7 +209,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,va
   background:linear-gradient(140deg,rgba(184,148,85,.12),rgba(184,148,85,.03));
   border:1px solid rgba(184,148,85,.3);
 }
-.result .lotnum{font-family:'IBM Plex Mono';font-weight:700;font-size:30px;color:var(--brass-bright);letter-spacing:-.02em}
+.result .lotnum{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:700;font-size:30px;color:var(--brass-bright);letter-spacing:-.02em}
 .result .meta{font-size:11.5px;color:var(--ink-dim);margin-top:6px;line-height:1.5}
 
 /* tables */
@@ -219,18 +219,18 @@ table{width:100%;border-collapse:collapse;font-size:13px}
 th,td{text-align:right;padding:10px 12px;border-bottom:1px solid var(--hairline)}
 th:first-child,td:first-child{text-align:left}
 th{font-size:10px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
-td.sym{font-family:'IBM Plex Mono';font-weight:600;color:var(--ink)}
-td.px{font-family:'IBM Plex Mono';color:var(--ink-dim)}
-td.lot{font-family:'IBM Plex Mono';font-weight:600;color:var(--brass-bright)}
+td.sym{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:600;color:var(--ink)}
+td.px{font-family:'IBM Plex Mono',ui-monospace,monospace;color:var(--ink-dim)}
+td.lot{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:600;color:var(--brass-bright)}
 tbody tr{transition:background .15s}
 tbody tr:hover{background:var(--surface-2)}
 tbody tr:last-child td{border-bottom:none}
-.age-tag{font-family:'IBM Plex Mono';font-size:10.5px;font-weight:600;margin-left:8px}
+.age-tag{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10.5px;font-weight:600;margin-left:8px}
 
 /* rules */
 .rules{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 @media(max-width:780px){.rules{grid-template-columns:1fr}}
-.rule-card h4{font-family:'Space Grotesk';font-weight:600;font-size:15px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.rule-card h4{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:600;font-size:15px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
 .badge{font-size:10px;padding:3px 9px;border-radius:6px;font-weight:700;letter-spacing:.05em}
 .badge.ftmo{background:rgba(184,148,85,.16);color:var(--brass-bright)}
 .badge.e8{background:rgba(70,169,155,.16);color:var(--profit)}
@@ -272,6 +272,7 @@ footer{margin-top:30px;padding-top:20px;border-top:1px solid var(--hairline);
 .rule-card td:last-child{white-space:normal}.rule-card{min-width:0}
 @media(max-width:440px){.eq-val{font-size:25px}.acct{padding:17px}.limits{font-size:10px}.command .cmd{padding:18px}.near-val{font-size:12px}}
 </style>
+<link rel="stylesheet" href="/dashboard.css">
 </head>
 <body>
 <div class="app-bg"><div class="wrap">
@@ -279,13 +280,46 @@ footer{margin-top:30px;padding-top:20px;border-top:1px solid var(--hairline);
 <div class="topbar">
   <div class="wordmark">
     <img class="brand-logo" alt="Quantlane — infinite challenge" src="data:image/png;base64,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">
-    <span class="role">Proprietary Trading Firm</span>
+    <span class="role">Trading workspace<br>Risk &amp; position sizing</span>
   </div>
+  <div class="top-actions"><a class="manage-link" href="/manage.html">Quản lý tài khoản ↗</a>
   <div class="conn">
     <span class="dot" id="globalDot"></span>
     <span id="globalStatus">Đang kết nối…</span>
     <span class="sep">·</span>
     <span class="mono" id="lastUpdate">—</span>
+  </div></div>
+</div>
+
+<!-- tools -->
+<div class="workspace-title"><div><div class="eyebrow">QUANTLANE / POSITION DESK</div><h1>Tính toán trước. Vào lệnh sau.</h1><p>Khối lượng vị thế, giá broker và rủi ro tài khoản trong một màn hình.</p></div><span class="version-tag mono">v2.16.0</span></div>
+<div class="tools">
+  <div class="panel calculator">
+    <h3>Tính khối lượng vị thế</h3>
+    <p class="hint">Chọn tài khoản, nhập rủi ro và khoảng cách stoploss. Dùng giá gần nhất của chính tài khoản đó, kể cả khi quá hạn hoặc mất kết nối.</p>
+    <label class="fld"><span class="cap">Tài khoản</span><select id="cAcct"></select></label>
+    <label class="fld"><span class="cap">Symbol</span><select id="cSym"></select></label>
+    <div class="input-pair"><label class="fld"><span class="cap">Rủi ro / lệnh (USD)</span><input id="cRisk" type="number" value="1280" min="0" step="50"></label>
+    <label class="fld"><span class="cap">Stoploss (%)</span><input id="cSLpct" type="number" value="0.5" min="0.001" step="0.1"></label></div>
+    <div class="result" aria-live="polite">
+      <div class="result-label">Khối lượng ước tính</div>
+      <div class="lotnum" id="cLot">—</div>
+      <div class="meta" id="cMeta">Nhập thông số để tính</div>
+      <div class="formula" id="cFormula"></div>
+    </div>
+    <p class="calc-footnote">Theo contract cấu hình · chưa gồm phí, spread và trượt giá. Kiểm tra bước lot và quy cách hợp đồng trên MT5.</p>
+  </div>
+
+  <div class="panel quote-panel">
+    <h3>Giá thị trường<span class="age-tag" id="pxAge"></span></h3>
+    <p class="hint">Giá bid từ MT5 của tài khoản đã chọn. Web kiểm tra mỗi 5 giây; EA hiện gửi mặc định mỗi 15 giây.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Symbol</th><th>Giá (bid)</th><th>Contract</th><th>Độ mới</th><th>Lot @ risk</th></tr></thead>
+        <tbody id="pxBody"><tr><td colspan="5" style="text-align:center;color:var(--ink-faint);padding:24px">Chờ dữ liệu…</td></tr></tbody>
+      </table>
+    </div>
+    <div class="quote-note" id="quoteNote">Chọn một dòng để xem khối lượng của symbol. Giá quá hạn sẽ không được dùng để tính lot.</div>
   </div>
 </div>
 
@@ -341,34 +375,6 @@ footer{margin-top:30px;padding-top:20px;border-top:1px solid var(--hairline);
 <div class="accounts" id="archiveGrid"></div></details>
 <div class="cap-hint">Kéo trên biểu đồ để phóng to · nhấp đúp để đặt lại · giữ Ctrl và kéo để di chuyển</div>
 
-<!-- tools -->
-<div class="shead"><h2>Công cụ vào lệnh</h2><span class="ln"></span></div>
-<div class="tools">
-  <div class="panel">
-    <h3>Tính khối lượng vị thế</h3>
-    <p class="hint">Nhập số tiền rủi ro mỗi lệnh và khoảng cách stoploss. Lot tính theo giá broker real-time của tài khoản đã chọn.</p>
-    <label class="fld"><span class="cap">Tài khoản</span><select id="cAcct"></select></label>
-    <label class="fld"><span class="cap">Symbol</span><select id="cSym"></select></label>
-    <label class="fld"><span class="cap">Rủi ro mỗi lệnh (USD)</span><input id="cRisk" class="mono" type="number" value="1280" min="0" step="50"></label>
-    <label class="fld"><span class="cap">Khoảng cách Stoploss (%)</span><input id="cSLpct" class="mono" type="number" value="0.5" min="0.001" step="0.1"></label>
-    <div class="result">
-      <div class="lotnum" id="cLot">—</div>
-      <div class="meta" id="cMeta">Nhập thông số để tính</div>
-    </div>
-  </div>
-
-  <div class="panel">
-    <h3>Giá real-time<span class="age-tag" id="pxAge"></span></h3>
-    <p class="hint">Giá bid broker đẩy từ MT5 (luồng nhanh ~5s). Cột Lot tính theo thông số bên trái cho mọi symbol.</p>
-    <div class="tbl-wrap">
-      <table>
-        <thead><tr><th>Symbol</th><th>Giá (bid)</th><th>Contract</th><th>Lot @ risk</th></tr></thead>
-        <tbody id="pxBody"><tr><td colspan="4" style="text-align:center;color:var(--ink-faint);padding:24px">Chờ dữ liệu…</td></tr></tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
 <!-- Stage is configured locally; every monetary risk limit comes from EA. -->
 <div class="shead"><h2>Cấu hình tài khoản</h2><span class="ln"></span></div>
 <div class="rules" id="accountRules"></div>
@@ -378,10 +384,11 @@ footer{margin-top:30px;padding-top:20px;border-top:1px solid var(--hairline);
 <div class="rules" id="fundRules"></div>
 <footer>
   <span>Cập nhật: <span id="lastUpdate2" class="mono">—</span></span>
-  <span><a href="/manage.html">Quản lý tài khoản</a> · Quantlane 2.13 · Dữ liệu EA, không phải xác nhận chính thức của quỹ</span>
+  <span><a href="/manage.html">Quản lý tài khoản</a> · Quantlane 2.16.0 · Dữ liệu EA, không phải xác nhận chính thức của quỹ</span>
 </footer>
 
 <script src="/fund-rules.js"></script>
+<script src="/dashboard-core.js"></script>
 <script>
 /* =======================================================================
    CẤU HÌNH NGUỒN DỮ LIỆU
@@ -541,10 +548,10 @@ function buildAccounts(config){
   if(!config || !Array.isArray(config.accounts)) throw new Error('Thiếu cấu hình tài khoản từ backend v2.13');
   if(configRevision===config.revision)return;
   Object.values(state).forEach(st=>st.chart?.destroy());
-  ACCOUNTS=config.accounts;configRevision=config.revision;
+  ACCOUNTS=QuantlaneCore.sortAccounts(config.accounts);configRevision=config.revision;
   acctGrid.innerHTML='';document.getElementById('archiveGrid').innerHTML='';
   ACCOUNTS.forEach(a=>{
-  state[a.alias] = { data:null, px:null, chart:null, history:[], lastTs:0, ok:false };
+  state[a.alias] = { lastQuotes:state[a.alias]?.accountKey===a.key?state[a.alias].lastQuotes:undefined, accountKey:a.key, data:null, px:null, chart:null, history:[], lastTs:0, ok:false };
   const card = document.createElement('article');
   card.className='acct'; card.id='card-'+a.alias; card.dataset.state='';
   card.innerHTML = `
@@ -585,17 +592,18 @@ function buildAccounts(config){
 /* ---------- charts (equity line + objective guides) ---------- */
 function makeChart(a){
   const ctx=document.getElementById('chart-'+a.alias);
+  if(typeof Chart==='undefined'){ctx.parentElement.textContent='Biểu đồ chưa tải được. Kiểm tra kết nối CDN.';return;}
   // Axis and guides get their values from the received EA snapshot.
   // No assumed risk floors before the first valid payload.
   state[a.alias].chart=new Chart(ctx,{
     type:'line',
     data:{labels:[],datasets:[{
-      label:'Equity',data:[],borderColor:'#8A6A28',borderWidth:2,
+      label:'Equity',data:[],borderColor:'#A07D33',borderWidth:2,
       pointRadius:(c)=>c.dataIndex===(c.dataset.data.length-1)?2.8:0,
-      pointBackgroundColor:'#8A6A28',pointBorderColor:'#FBF7EF',pointBorderWidth:1.5,
+      pointBackgroundColor:'#A07D33',pointBorderColor:'#FBF7EF',pointBorderWidth:1.5,
       fill:true,tension:.18,
       backgroundColor:(c)=>{const g=c.chart.ctx.createLinearGradient(0,0,0,172);
-        g.addColorStop(0,'rgba(138,106,40,.28)');g.addColorStop(1,'rgba(138,106,40,0)');return g;}
+        g.addColorStop(0,'rgba(160,125,51,.15)');g.addColorStop(1,'rgba(138,106,40,0)');return g;}
     }]},
     options:{responsive:true,maintainAspectRatio:false,animation:false,
       layout:{padding:{left:2,right:2}},
@@ -656,17 +664,21 @@ function makeChart(a){
   ctx.ondblclick=()=>{ try{ state[a.alias].chart.resetZoom(); }catch(e){} };
 }
 /* ---------- fetch ---------- */
+let pullInFlight=false;
 async function pullAll(){
+  if(pullInFlight)return;
+  pullInFlight=true;
   try{
-    const res=await fetch(DATA_ENDPOINT+'?t='+Date.now(),{cache:'no-store'});
+    const res=await fetch(DATA_ENDPOINT+'?t='+Date.now(),{cache:'no-store',signal:AbortSignal.timeout(12000)});
     if(!res.ok) throw new Error(res.status);
     const all=await res.json();
     buildAccounts(all._config);
     failStreak=0; document.getElementById('cfgWarn').classList.remove('show');
     ACCOUNTS.forEach(a=>{
+      QuantlaneCore.rememberQuotes(state[a.alias]);
       const d=all[a.key];
       const px=all[a.key+'_px'];
-      state[a.alias].px=(px&&px.prices)?px:null;
+      state[a.alias].px=(px&&(px.prices||px.quotes))?px:null;
       // seed lịch sử dài hạn từ kho (1 lần)
       if(state[a.alias].history.length===0){
         const hist=all[a.key+'_hist'];
@@ -675,6 +687,7 @@ async function pullAll(){
       }
       if(d&&typeof d.ts!=='undefined'){
         state[a.alias].data=d; state[a.alias].lastTs=d.ts*1000; state[a.alias].ok=true;
+        QuantlaneCore.rememberQuotes(state[a.alias]);
         renderAccount(a,d);
       }else{
         state[a.alias].ok=false; setDot(a.alias,'off','chưa có data');
@@ -689,7 +702,8 @@ async function pullAll(){
     refreshGlobals(); refreshDDBanner();
     ACCOUNTS.forEach(a=>{if(state[a.alias].data) renderHealth(a,state[a.alias].data);});
     if(failStreak>=2) document.getElementById('cfgWarn').classList.add('show');
-  }
+    refreshPrices();
+  }finally{pullInFlight=false;}
 }
 function setDot(alias,cls,txt){
   const dot=document.getElementById('dot-'+alias), st=document.getElementById('st-'+alias);
@@ -865,68 +879,67 @@ function currentCalcInputs(){
   const a=ACCOUNTS.find(x=>x.alias===alias);
   return {alias,risk,slPct,a};
 }
-function calcLot(price,slPct,risk,contract){
-  if(price<=0||slPct<=0||risk<=0) return null;
-  const lossPerLot=price*(slPct/100)*contract;
-  if(lossPerLot<=0) return null;
-  return risk/lossPerLot;
-}
-function getPriceSource(alias){
-  const st=state[alias];
-  if(st&&st.px&&st.px.prices) return st.px;
-  if(st&&st.data&&st.data.prices) return st.data;
-  return null;
-}
-function priceAgeSec(src){
-  if(!src||typeof src.ts==='undefined') return null;
-  return Math.max(0,Math.round(Date.now()/1000-src.ts));
+const calcLot=QuantlaneCore.calcLot;
+function quoteFor(alias,symbol){return QuantlaneCore.selectQuote(state[alias],symbol);}
+function ageLabel(age){
+  if(age==null)return 'Không rõ tuổi';
+  if(age<60)return Math.floor(age)+'s';
+  if(age<3600)return Math.floor(age/60)+' phút';
+  if(age<86400)return Math.floor(age/3600)+' giờ';
+  return Math.floor(age/86400)+' ngày';
 }
 function refreshPrices(){
   const {alias,risk,slPct,a}=currentCalcInputs();
-  if(!a){document.getElementById('pxBody').innerHTML='';document.getElementById('pxAge').textContent='';updateBigLot();return;}
-  const src=getPriceSource(alias);
-  const body=document.getElementById('pxBody');
+  const body=document.getElementById('pxBody'),ageEl=document.getElementById('pxAge');
+  if(!a){body.innerHTML='<tr><td colspan="5">Chưa có tài khoản hoạt động</td></tr>';ageEl.textContent='';updateBigLot();return;}
   const syms=SYMBOLS_BY_FIRM[a.firm]||Object.keys(CONTRACT);
-  const rows=[];
-  syms.forEach(canon=>{
-    const price=(src&&src.prices&&src.prices[canon]!=null)?src.prices[canon]:null;
-    const ct=contractFor(a.firm,canon);
-    const lot=(price!=null)?calcLot(price,slPct,risk,ct):null;
-    rows.push(`<tr><td class="sym">${canon}</td><td class="px">${price!=null?price:'—'}</td><td class="px">${ct.toLocaleString()}</td><td class="lot">${lot==null?'—':lot.toFixed(2)}</td></tr>`);
-  });
-  body.innerHTML=rows.join('');
-  const age=priceAgeSec(src), ageEl=document.getElementById('pxAge');
-  if(ageEl){
-    if(age==null) ageEl.textContent='';
-    else{ ageEl.textContent=`${age}s trước`; ageEl.style.color=age<=10?'var(--safe)':age<=25?'var(--caution)':'var(--danger)'; }
-  }
+  const selected=document.getElementById('cSym').value;
+  let freshCount=0;
+  body.innerHTML=syms.map(canon=>{
+    const q=quoteFor(alias,canon),ct=contractFor(a.firm,canon);
+    if(q.fresh)freshCount++;
+    const lot=calcLot(q.price,slPct,risk,ct,canon);
+    const color=q.fresh?(q.verified?'var(--safe)':'var(--caution)'):'var(--danger)';
+    const status=q.fresh?(q.verified?'Mới':'Bản tin mới'):q.price==null?'Chưa có':'Giá gần nhất';
+    return `<tr data-symbol="${canon}" class="${selected===canon?'selected ':''}${q.fresh?'':'stale'}" title="${escapeHTML(q.reason)}"><td class="sym"><button type="button" class="symbol-pick" data-symbol="${canon}">${canon}</button></td><td class="px">${q.price??'—'}</td><td class="px">${ct.toLocaleString()}</td><td class="quote-state" style="color:${color}"><span class="quote-status"></span>${status}<small>${ageLabel(q.age)}${q.verified?'':' · bản tin'}</small></td><td class="lot">${lot==null?'—':lot.toFixed(2)}</td></tr>`;
+  }).join('');
+  ageEl.textContent=`${alias} · ${freshCount}/${syms.length} mã mới`;
+  ageEl.style.color=freshCount===syms.length?'var(--safe)':'var(--caution)';
+  document.getElementById('quoteNote').textContent=`${alias} · Giá và lot chỉ lấy từ tài khoản đang chọn. Khi quá hạn hoặc mất kết nối, vẫn tính theo giá gần nhất đã nhận.`+(state[alias]?.ok?'':' API đang mất kết nối; dữ liệu hiển thị là bản nhận gần nhất.');
   updateBigLot();
 }
 function updateBigLot(){
   const {alias,risk,slPct,a}=currentCalcInputs();
   const sym=document.getElementById('cSym').value;
-  const src=getPriceSource(alias);
-  const out=document.getElementById('cLot'), meta=document.getElementById('cMeta');
+  const out=document.getElementById('cLot'),meta=document.getElementById('cMeta'),formula=document.getElementById('cFormula');
+  formula.textContent='';
   if(!a){out.textContent='—';meta.textContent='Không có tài khoản hoạt động';return;}
-  if(!src||!src.prices||src.prices[sym]==null){out.textContent='—'; meta.textContent='Chưa có giá symbol này'; return;}
-  const price=src.prices[sym], ct=contractFor(a.firm,sym), lot=calcLot(price,slPct,risk,ct);
-  if(lot==null){out.textContent='—'; meta.textContent='Kiểm tra lại thông số'; return;}
-  const age=priceAgeSec(src);
+  const q=quoteFor(alias,sym);
+  if(q.price==null){out.textContent='—';meta.textContent=`${sym} · Chưa nhận được giá hợp lệ của ${alias}. Cần nhận giá ít nhất một lần để tính lot.`;return;}
+  const ct=contractFor(a.firm,sym),lot=calcLot(q.price,slPct,risk,ct,sym);
+  if(lot==null){out.textContent='—';meta.textContent='Nhập rủi ro và stoploss lớn hơn 0';return;}
   out.textContent=lot.toFixed(2)+' lot';
-  meta.textContent=`${sym} @ ${price} · contract ${ct.toLocaleString()} · SL ${slPct}% · risk ${money(risk,0)}${age!=null?` · giá ${age}s trước`:''}`;
+  meta.textContent=(q.fresh?'':`Dùng giá gần nhất · ${q.reason}. `)+`${sym} @ ${q.price} · ${alias} · ${q.source} · ${ageLabel(q.age)} trước${q.verified?'':' (tuổi bản tin, chưa có tuổi tick)'}`;
+  formula.textContent=sym==='USDJPY'
+    ? `${risk.toLocaleString('en-US')} ÷ ${Number((slPct/100).toPrecision(10))} ÷ ${ct.toLocaleString('en-US')} = ${lot.toFixed(2)} lot · quy đổi JPY → USD tại giá hiện tại`
+    : `${risk.toLocaleString('en-US')} ÷ (${q.price} × ${Number((slPct/100).toPrecision(10))} × ${ct.toLocaleString('en-US')}) = ${lot.toFixed(2)} lot`;
 }
 
 /* ---------- selects ---------- */
 function fillSelects(){
   const cAcct=document.getElementById('cAcct'), cSym=document.getElementById('cSym');
-  cAcct.innerHTML=ACCOUNTS.filter(a=>a.active).sort((a,b)=>(a.firm!=="E8 Market")-(b.firm!=="E8 Market")).map(a=>`<option value="${a.alias}">${a.alias} · ${a.firm}</option>`).join('');
+  const previous=cAcct.value;
+  cAcct.innerHTML=ACCOUNTS.filter(a=>a.active).map(a=>`<option value="${a.alias}">${a.alias} · ${programLabel(a)}</option>`).join('');
+  if(ACCOUNTS.some(a=>a.active&&a.alias===previous))cAcct.value=previous;
   syncSymbols();
 
 }
 function syncSymbols(){
   const a=ACCOUNTS.find(x=>x.alias===document.getElementById('cAcct').value);
   const keys=a?(SYMBOLS_BY_FIRM[a.firm]||Object.keys(CONTRACT)):[];
+  const previous=document.getElementById('cSym').value;
   document.getElementById('cSym').innerHTML=keys.map(k=>`<option value="${k}">${k}</option>`).join('');
+  if(keys.includes(previous))document.getElementById('cSym').value=previous;
   updateBigLot();
 }
 
@@ -959,7 +972,8 @@ document.querySelectorAll('#rangeSeg button').forEach(b=>{
   });
 });
 document.getElementById('cAcct').addEventListener('change',()=>{syncSymbols();refreshPrices();});
-document.getElementById('cSym').addEventListener('change',updateBigLot);
+document.getElementById('cSym').addEventListener('change',refreshPrices);
+document.getElementById('pxBody').addEventListener('click',e=>{const row=e.target.closest('[data-symbol]');if(row){document.getElementById('cSym').value=row.dataset.symbol;refreshPrices();}});
 ['cRisk','cSLpct'].forEach(id=>document.getElementById(id).addEventListener('input',refreshPrices));
 tick();
 setInterval(tick,5000);
@@ -968,7 +982,7 @@ setInterval(()=>{
   ACCOUNTS.forEach(a=>{const d=state[a.alias].data;if(!d)return;renderHealth(a,d);
     setDot(a.alias,!a.active?'':!state[a.alias].ok?'off':accountFresh(d)?'live':'stale',!a.active?'đã ngừng':!state[a.alias].ok?'API offline':accountFresh(d)?'EA cập nhật':'dữ liệu trễ');
   });
-  refreshGlobals(); refreshDDBanner();
+  refreshGlobals(); refreshDDBanner(); refreshPrices();
 },1000);
 document.getElementById('archive').addEventListener('toggle',()=>{ACCOUNTS.filter(a=>!a.active).forEach(a=>{state[a.alias].chart?.resize();renderChartView(a);});});
 refreshRules();

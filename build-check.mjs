@@ -10,4 +10,6 @@ const html=readFileSync(new URL('./index.html',import.meta.url),'utf8');
 for(const match of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))new Script(match[1]);
 new Script(readFileSync(new URL('./manage.js',import.meta.url),'utf8'));
 new Script(readFileSync(new URL('./fund-rules.js',import.meta.url),'utf8'));
-console.log('Quantlane 2.13: configuration and JavaScript checks passed. Netlify bundles Functions next.');
+console.log('Quantlane 2.16.0: configuration and JavaScript checks passed. Netlify bundles Functions next.');
+
+new Script(readFileSync(new URL('./dashboard-core.js',import.meta.url),'utf8'));

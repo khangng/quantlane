@@ -1,46 +1,13 @@
-// sw.js — service worker cho Risk Desk PWA
-// Cache phần "vỏ" (shell) để app mở nhanh; dữ liệu luôn lấy mới từ mạng.
-const CACHE = 'riskdesk-v213';
-const SHELL = [
-  '/', '/index.html', '/fund-rules.js', '/manifest.json',
-  '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png', '/favicon.png'
-];
-
-self.addEventListener('install', (e) => {
-  e.waitUntil(
-    caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())
-  );
-});
-
-self.addEventListener('activate', (e) => {
-  e.waitUntil(
-    caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
-      .then(() => self.clients.claim())
-  );
-});
-
-self.addEventListener('fetch', (e) => {
-  const url = new URL(e.request.url);
-
-  // Dữ liệu từ Netlify Functions: luôn lấy mạng, không cache (tránh số liệu cũ)
-  if (url.pathname.includes('/.netlify/functions/')) return;
-  if (/^\/manage(?:\.html|\.js|\.css)?$/.test(url.pathname)) return;
-
-  // Vỏ app (same-origin GET): ưu tiên cache, có mạng thì cập nhật nền
-  if (e.request.method === 'GET' && url.origin === self.location.origin) {
-    e.respondWith(
-      caches.match(e.request).then((cached) => {
-        const live = fetch(e.request).then((res) => {
-          if (res && res.status === 200) {
-            const copy = res.clone();
-            caches.open(CACHE).then((c) => c.put(e.request, copy));
-          }
-          return res;
-        }).catch(() => cached);
-        return cached || live;
-      })
-    );
-  }
-  // Tài nguyên khác (CDN Chart.js, font...) để mạng xử lý mặc định
+// Network-first shell: a saved PWA picks up fixes on reload.
+const CACHE = 'riskdesk-v2160';
+const SHELL = ['/', '/index.html', '/dashboard.css', '/dashboard-core.js', '/fund-rules.js', '/manifest.json', '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png', '/favicon.png'];
+self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting())));
+self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('riskdesk-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',e=>{
+  const url=new URL(e.request.url);
+  if(e.request.method!=='GET'||url.origin!==self.location.origin||url.pathname.includes('/.netlify/functions/')||/^\/manage(?:\.html|\.js|\.css)?$/.test(url.pathname))return;
+  e.respondWith(fetch(e.request).then(async res=>{
+    if(res.ok){const c=await caches.open(CACHE);await c.put(e.request,res.clone());}
+    return res;
+  }).catch(async()=>await caches.match(e.request)||Response.error()));
 });

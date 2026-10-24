@@ -38,7 +38,7 @@ export default async (req) => {
   // gắn thời điểm nhận để web tính độ trễ chính xác phía server
   body.server_recv = Math.floor(Date.now() / 1000);
 
-  const store = getStore("riskdesk");
+  const store = getStore({name:"riskdesk",consistency:"strong"});
   await store.setJSON(alias, body);
 
   // ----- LƯU LỊCH SỬ EQUITY LÂU DÀI (chỉ cho luồng equity, không cho _px) -----

@@ -1,0 +1,72 @@
+/* Quantlane 2.15.1: original warm gold palette with the updated position desk layout. */
+:root{
+  /* warm-light instrument panel */
+  --bg:#EFE8DA;          /* warm sand base */
+  --surface:#FBF7EF;     /* near-white warm panel */
+  --surface-2:#F1EADB;   /* inset / track */
+  --hairline:#DED3BF;    /* warm hairline */
+  --hairline-2:#CEC1A7;
+  --ink:#2A241C;         /* dark warm ink */
+  --ink-dim:#6B6151;     /* secondary */
+  --ink-faint:#9A8E78;   /* labels / tertiary */
+  --brass:#A07D33;       /* structural accent (antique gold, darker for light) */
+  --brass-bright:#B8924A;
+  --safe:#4E8C58;        /* risk: safe */
+  --caution:#C0851F;     /* risk: caution */
+  --danger:#C24A33;      /* risk: danger */
+  --profit:#2F8C82;      /* profit target */
+  --shadow:0 1px 2px rgba(80,60,30,.05),0 6px 20px rgba(80,60,30,.06);
+  --shadow-lift:0 4px 10px rgba(80,60,30,.08),0 16px 40px rgba(80,60,30,.10);
+}
+html,body{background:var(--bg)!important}
+.app-bg{background:radial-gradient(ellipse at 75% 0,rgba(160,125,51,.08) 0,transparent 50%),var(--bg)}
+.wrap{max-width:1560px;padding-top:24px}
+.topbar{padding-bottom:20px;border-bottom:1px solid var(--hairline);margin-bottom:24px}
+.brand-logo{height:58px;border-radius:10px;box-shadow:none}
+.wordmark{gap:18px}.wordmark .role{align-self:center;letter-spacing:.13em;line-height:1.8;color:var(--ink-dim)}
+.top-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.manage-link{color:var(--ink-dim);text-decoration:none;font-size:12px;font-weight:600;padding:9px 13px;border:1px solid var(--hairline);border-radius:9px;background:var(--surface)}
+.manage-link:hover{border-color:var(--brass);color:var(--brass)}
+.conn{font-size:11px;padding:9px 13px;background:var(--surface);border-radius:9px}
+.workspace-title{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;margin:0 0 20px}
+.eyebrow{font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:var(--brass);font-weight:700;margin-bottom:5px}
+.workspace-title h1{font-family:'Space Grotesk',system-ui,sans-serif;font-size:29px;line-height:1.25;letter-spacing:-.04em;font-weight:600}
+.workspace-title p{color:var(--ink-faint);font-size:12px;margin-top:6px}
+.version-tag{border:1px solid var(--hairline);background:var(--surface);color:var(--ink-dim);border-radius:6px;padding:4px 8px;font-size:10px;white-space:nowrap}
+.tools{grid-template-columns:minmax(310px,.85fr) minmax(0,1.8fr);gap:20px;margin-bottom:26px;align-items:stretch}
+.panel,.acct{border-radius:16px;box-shadow:var(--shadow)}
+.panel{padding:23px}.panel h3{font-size:16px;letter-spacing:-.02em}
+.panel .hint{font-size:12px;line-height:1.65;max-width:700px}
+.calculator{display:flex;flex-direction:column;border-top:3px solid var(--brass);padding-top:21px}
+.calculator .fld{margin-bottom:15px}.fld .cap{font-size:10px;letter-spacing:.065em;color:var(--ink-dim)}
+input,select{background-color:var(--bg);border-color:var(--hairline);border-radius:8px;padding:11px 12px;font-size:14px;min-height:44px}
+.input-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.result{margin-top:auto;background:linear-gradient(135deg,#F3E9D5,#F8F2E6);border:1px solid var(--hairline);border-radius:12px;padding:22px;color:var(--ink)}
+.result-label{font-size:10px;font-weight:500;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.12em}
+.result .lotnum{font-size:38px;color:var(--brass-bright);line-height:1.4;margin:4px 0;font-weight:600}
+.result .meta{color:var(--ink-dim);font-size:11px;line-height:1.7}
+.result .formula{font-family:'IBM Plex Mono',monospace;font-size:10px;line-height:1.8;margin-top:10px;color:var(--brass);overflow-wrap:anywhere}
+.calc-footnote{font-size:10px;line-height:1.6;color:var(--ink-faint);margin-top:12px}
+.quote-panel h3{justify-content:space-between;flex-wrap:wrap}.age-tag{font-family:inherit;font-size:10px;padding:4px 8px;border-radius:6px;background:var(--surface-2);margin:0}
+.quote-panel table{min-width:530px;font-size:12px}.quote-panel th{background:var(--surface-2);font-size:9px;letter-spacing:.05em;padding:10px 11px}.quote-panel td{padding:11px;line-height:1.45}
+.quote-panel th:first-child{border-radius:6px 0 0 6px}.quote-panel th:last-child{border-radius:0 6px 6px 0}
+.quote-panel tbody tr{cursor:pointer}.quote-panel tr.selected{background:#F2E7CF}.quote-panel tr.selected td:first-child{box-shadow:inset 3px 0 var(--brass)}
+.quote-panel tr.stale .px,.quote-panel tr.stale .lot{color:var(--ink-faint)}
+.quote-panel td.quote-state{font-size:10px;white-space:nowrap}.quote-state small{display:block;font-size:9px;color:var(--ink-faint)}
+.quote-status{display:inline-block;width:5px;height:5px;border-radius:50%;background:currentColor;margin-right:5px;vertical-align:middle}
+.symbol-pick{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:3px 0;text-align:left}
+.quote-note{font-size:10px;line-height:1.7;margin-top:14px;padding-top:12px;border-top:1px solid var(--hairline);color:var(--ink-faint)}
+.command{grid-template-columns:1fr 1fr 1.2fr;box-shadow:none;border-radius:14px;margin-top:8px;margin-bottom:20px}.command::after{display:none}
+.cmd{padding:20px}.cmd .cap{letter-spacing:.08em;font-size:9px;line-height:1.6}.cmd .big{font-size:25px}.cmd .small{font-family:inherit;font-size:11px;font-weight:400;line-height:1.7}.cmd-risk{background:var(--surface)}
+.near-name{font-size:12px}.near-val{font-size:12px}.near-pct{font-size:9px}
+.shead{margin:26px 0 15px}.shead h2{font-size:17px;font-weight:600;letter-spacing:-.02em}.shead .ln{background:var(--hairline)}
+.seg{border-radius:8px;background:var(--surface);padding:3px}.seg button{border-radius:5px;font-family:inherit;font-size:11px;font-weight:500}.seg button.on{background:var(--brass);box-shadow:none}
+.accounts{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.acct{padding:20px}.acct::before{height:3px;background:var(--hairline-2);opacity:1}.acct:first-child::before{background:var(--brass)}
+.acct:hover{transform:none}.acct-name{font-size:18px;letter-spacing:0}.acct-top{gap:8px}.chip{font-size:9px;padding:4px 8px;border:none;background:var(--surface-2)}.chip .dot{width:6px;height:6px}.acct-firm{font-size:9px;line-height:1.7;letter-spacing:.04em}
+.eq-val{font-size:27px;letter-spacing:-.05em}.metric-value{font-size:12px}.metric-label{font-size:9px}.status-lines{background:var(--bg);padding:10px;font-size:10px}.limits{font-size:10px}.limits .sub{font-size:8px}
+.gauge-track{height:9px;border:0;box-shadow:none}.gauge-head .lbl{font-size:9px}.gauge-room{font-size:11px}.gauge-scale{font-size:8px}.maxbar-head .lbl{font-size:9px}.maxbar-head .v{font-size:10px}
+.banner{margin:16px 0}.banner .b-title{font-size:12px}.banner .b-sub{font-size:11px}.banner .ico{font-size:16px}.banner.dd{background:#F6E3D8;border-color:#f2c3b4;border-left-color:var(--danger)}
+.rules{gap:18px}.rule-card{box-shadow:none}.rule-card h4{font-size:14px}.rule-card td{font-size:11px}footer a{color:var(--brass)}
+@media(max-width:1190px){.accounts{grid-template-columns:repeat(2,minmax(0,1fr))}.tools{grid-template-columns:minmax(290px,.9fr) minmax(0,1.6fr)}.command{grid-template-columns:1fr 1fr}.cmd-risk{grid-column:1/-1}.near-list{flex-direction:row;gap:22px;flex-wrap:wrap}.near-item{flex:1;min-width:180px}}
+@media(max-width:850px){.tools{grid-template-columns:1fr}.result{margin-top:4px}.quote-panel table{min-width:510px}.wordmark .role{display:none}.workspace-title h1{font-size:26px}.accounts{grid-template-columns:1fr}.topbar{gap:14px}.top-actions{margin-left:auto}.conn .sep,.conn #lastUpdate{display:none}}
+@media(max-width:520px){.wrap{padding:16px 12px 36px}.brand-logo{height:46px}.topbar{margin-bottom:20px}.top-actions{gap:6px}.manage-link{font-size:10px;padding:8px}.conn{padding:8px;font-size:10px;gap:6px}.panel{padding:18px}.workspace-title h1{font-size:24px}.workspace-title p{font-size:11px}.command{grid-template-columns:1fr}.cmd-risk{grid-column:auto}.command .cmd{padding:18px}.near-list{flex-direction:column;gap:8px}.input-pair{gap:10px}.input-pair .cap{font-size:9px}.rules{grid-template-columns:1fr}.shead{gap:8px}.shead h2{font-size:16px}.seg button{padding:5px 9px}.result .lotnum{font-size:34px}.version-tag{display:none}}

@@ -18,3 +18,23 @@
     Cache-Control = "no-cache"
 
 # index.html ở thư mục gốc sẽ tự được serve tại "/"
+
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/dashboard-core.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/dashboard.css"
+  [headers.values]
+    Cache-Control = "no-cache"

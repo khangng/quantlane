@@ -9,7 +9,7 @@ import { loadRegistry,publicAccount } from '../../lib/registry.js';
 export default async (req) => {
   const url = new URL(req.url);
   const acct = (url.searchParams.get("acct") || "").toLowerCase();
-  const store = getStore("riskdesk");
+  const store = getStore({name:"riskdesk",consistency:"strong"});
 
   try {
     const {data:registry}=await loadRegistry();
